@@ -56,16 +56,16 @@ class CustomTestrailReporter {
    * @param  _options - Run configuration
    */
   onRunStart(_results, _options) {
+    console.log(
+      message("Testrail Jest Reporter is running..."),
+      JSON.stringify(this._options, null, 2)
+    );
     if (
       this._options.project_id &&
       !isNaN(this._options.project_id) &&
       this._options.milestone
     ) {
       caller.get_milestone_id();
-      console.log(
-        message("Testrail Jest Reporter is running..."),
-        JSON.stringify(this._options, JSON.stringify(caller.get_milestone_id()))
-      );
     } else {
       console.log(error(`! Testrail Jest Reporter Error !`));
       console.log(
