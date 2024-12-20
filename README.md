@@ -1,6 +1,6 @@
 [![TestRail v6.7](https://img.shields.io/badge/TestRail%20API-v2-green.svg)](http://docs.gurock.com/testrail-api2/start) [![NPM](https://img.shields.io/npm/l/testrail-jest-reporter)](https://github.com/AntonChaukin/testrail-jest-reporter/blob/main/LICENSE) [![NPM](https://img.shields.io/node/v/testrail-jest-reporter)](https://github.com/AntonChaukin/testrail-jest-reporter/blob/main/package.json)
 
-
+Original credits to: [AntonChaukin/testrail-jest-reporter](https://github.com/AntonChaukin/testrail-jest-reporter)
 # Jest to TestRail Reporter
 This package allows you to use [Jest](https://jestjs.io/) and report  your test results to [TestRail](http://www.gurock.com/testrail/).
 <br>**Please use with combination with the default reporter**
