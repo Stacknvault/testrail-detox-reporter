@@ -11,6 +11,7 @@ This package allows you to use [Jest](https://jestjs.io/) and report  your test 
 
 ```code
 npm i testrail-detox-reporter --save-dev
+        or
 yarn add testrail-detox-reporter --dev
 ```
 
