@@ -1,5 +1,5 @@
 {
-  "name": "testrail-jest-reporter",
+  "name": "testrail-detox-reporter",
   "version": "1.2.0",
   "description": "Custom Jest reporter for Testrail synchronization",
   "main": "index.js",
