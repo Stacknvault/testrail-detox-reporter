@@ -16,6 +16,7 @@ module.exports = {
   get_milestone_id,
   add_results,
   get_tests,
+  add_run,
 };
 
 function init(_options) {
@@ -63,6 +64,30 @@ async function add_results(testsResults) {
     .catch((err) => {
       console.log(error(err));
       return false;
+    });
+}
+
+async function add_run() {
+  const today = new Date();
+  await get_milestone_id.call(this);
+  let run_data = {
+    name: `Automated Run ${today.getDate()}.${
+      today.getMonth() + 1
+    }.${today.getFullYear()}`,
+    case_ids: [],
+    include_all: true,
+    message: "Automated Run",
+    suite_id: this._project_id,
+    milestone_id: this._milestone_id,
+  };
+  return tr_api
+    .add_run(this._project_id, run_data)
+    .then((res) => {
+      console.log(chalk.bold.green("RUN created", JSON.stringify(res)));
+      //   this._runs_ids.push({ id: res.id, suite_id: null, plan_id: null });
+    })
+    .catch((e) => {
+      console.log(error(e.stack));
     });
 }
 

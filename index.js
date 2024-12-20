@@ -66,6 +66,7 @@ class CustomTestrailReporter {
       this._options.milestone
     ) {
       caller.get_milestone_id();
+      caller.add_run();
     } else {
       console.log(error(`! Testrail Jest Reporter Error !`));
       console.log(
