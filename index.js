@@ -66,7 +66,7 @@ class CustomTestrailReporter {
       this._options.milestone
     ) {
       caller.get_milestone_id();
-      caller.add_run();
+      //   caller.add_run();
     } else {
       console.log(error(`! Testrail Jest Reporter Error !`));
       console.log(
@@ -96,6 +96,7 @@ class CustomTestrailReporter {
     if (caller._milestone_id) {
       _testResults.testResults.forEach((result) => {
         const testcases = this._utils.formatCase(result);
+        console.log(message(`Testrail test cases...`), testcases);
         if (testcases) {
           for (let i = 0, len = testcases.length; i < len; i++) {
             this.results.push(testcases[i]);
