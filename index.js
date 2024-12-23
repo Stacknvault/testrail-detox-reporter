@@ -93,8 +93,18 @@ class CustomTestrailReporter {
    * @param _aggregatedResult - Results for the test run at the point in time of the test suite being executed
    */
   onTestResult(_test, _testResults, _aggregatedResult) {
+    // console.log(message("_test"), JSON.stringify(_test, null, 2));
+    // console.log(message("_testResults"), JSON.stringify(_testResults, null, 2));
+    // console.log(
+    //   message("_aggregatedResult"),
+    //   JSON.stringify(_aggregatedResult, null, 2)
+    // );
     if (caller._milestone_id) {
       _testResults.testResults.forEach((result) => {
+        // console.log(
+        //   message(`Testrail Jest Reporter is processing test results...`),
+        //   result
+        // );
         const testcases = this._utils.formatCase(result);
         console.log(message(`Testrail test cases...`), testcases);
         if (testcases) {
@@ -103,6 +113,7 @@ class CustomTestrailReporter {
           }
         }
       });
+      console.log("RESULTS", this.results);
     }
   }
 

@@ -45,7 +45,9 @@ async function add_results(testsResults) {
     runs = runs.concat(updated_runs);
   }
   return Promise.all(
+    console.log("RUNS", runs),
     runs.map((run) => {
+      console.log("RUN", run.run_id, run.results);
       return tr_api.add_results_for_cases(run.run_id, { results: run.results });
     })
   )
