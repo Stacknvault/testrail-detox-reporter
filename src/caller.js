@@ -11,6 +11,7 @@ const ajv = new Ajv({
 });
 const error = chalk.bold.red;
 const message = chalk.bold.green;
+let runID = null;
 
 module.exports = {
   init,
@@ -18,6 +19,7 @@ module.exports = {
   add_results,
   get_tests,
   add_run,
+  close_run,
 };
 
 function init(_options) {
@@ -47,6 +49,7 @@ async function add_results(testsResults) {
   }
 
   console.log("RUNS", runs);
+  runID = runs[0].run_id;
 
   return Promise.all(
     runs.map((run) => {
@@ -89,7 +92,7 @@ async function add_run() {
     .add_run(this._project_id, run_data)
     .then((res) => {
       console.log(chalk.bold.green("RUN created", JSON.stringify(res)));
-      //   this._runs_ids.push({ id: res.id, suite_id: null, plan_id: null });
+      this._runs_ids.push({ id: res.id, suite_id: null, plan_id: null });
     })
     .catch((e) => {
       console.log(error(e.stack));
@@ -211,6 +214,7 @@ function get_tests() {
     .catch((err) => {
       console.log(error(err.stack));
     });
+  // .then(() => this._runs_ids);
 }
 
 function get_suite_mode() {
@@ -390,4 +394,20 @@ async function update_run(cases) {
   }
 
   return runs;
+}
+
+async function close_run() {
+  console.log("RUNS", runID);
+  if (this._runs_ids && runID) {
+    await tr_api
+      .close_run(runID)
+      .then((response) => {
+        console.log("Run closed successfully:", response);
+      })
+      .catch((error) => {
+        console.error("****Error closing run:", error);
+      });
+  } else {
+    console.error("****Error: No runs to close.");
+  }
 }

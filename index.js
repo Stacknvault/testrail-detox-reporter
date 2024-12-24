@@ -51,13 +51,13 @@ class CustomTestrailReporter {
       message("Testrail Jest Reporter is running..."),
       JSON.stringify(this._options, null, 2)
     );
+
     if (
       this._options.project_id &&
       !isNaN(this._options.project_id) &&
       this._options.milestone
     ) {
       caller.get_milestone_id();
-      //   caller.add_run();
     } else {
       console.log(error(`! Testrail Jest Reporter Error !`));
       console.log(
@@ -113,6 +113,9 @@ class CustomTestrailReporter {
           } else {
             console.log(error("Invalid response from add_results"));
           }
+        })
+        .then(() => {
+          caller.close_run();
         })
         .catch((e) => {
           console.log(error(`! Testrail Jest Reporter Error !\n${e.stack}`));
