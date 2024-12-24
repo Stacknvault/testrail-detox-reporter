@@ -357,7 +357,7 @@ async function update_run(cases) {
       if (suits[j].suite_id) {
         try {
           const { name } = await tr_api.get_suite(suits[j].suite_id);
-          suite_name = name;
+          suite_name = `Automated ${name} Test Run`;
         } catch (e) {
           console.log(error(e.stack));
         }
