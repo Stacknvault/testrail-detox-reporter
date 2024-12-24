@@ -25,9 +25,9 @@ class Utils {
 
   formatCase(testResult) {
     let cases = [];
-    console.log("TITLE", testResult.title);
+    // console.log("TITLE", testResult.title);
     const cases_ids = this._formatTitle(testResult.title);
-    console.log("CASES_IDS", cases_ids);
+    // console.log("CASES_IDS", cases_ids);
     if (cases_ids) {
       const message = !!testResult.failureMessages.length
         ? testResult.failureMessages
