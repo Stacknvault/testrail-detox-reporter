@@ -10,6 +10,7 @@ const ajv = new Ajv({
   allErrors: true,
 });
 const error = chalk.bold.red;
+const message = chalk.bold.green;
 
 module.exports = {
   init,
@@ -44,17 +45,19 @@ async function add_results(testsResults) {
     const updated_runs = await update_run.call(this, cases);
     runs = runs.concat(updated_runs);
   }
+
+  console.log("RUNS", runs);
+
   return Promise.all(
-    console.log("RUNS", runs),
     runs.map((run) => {
       console.log("RUN", run.run_id, run.results);
       return tr_api.add_results_for_cases(run.run_id, { results: run.results });
     })
   )
-    .then((response) => {
+    .then((responses) => {
       let tests_count = 0;
-      response.map((run) => {
-        run.map((result) => {
+      responses.forEach((response) => {
+        response.forEach((result) => {
           if (result && result.id) tests_count++;
         });
       });
