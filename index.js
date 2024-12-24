@@ -42,15 +42,12 @@ class CustomTestrailReporter {
     this.results = [];
 
     // Log _options and milestone
-    console.log(message("Constructor _options:"), _options);
-    console.log(message("Constructor milestone:"), milestone);
+    // console.log(message("Constructor _options:"), _options);
+    // console.log(message("Constructor milestone:"), milestone);
   }
 
   onRunStart(_results, _options) {
-    console.log(
-      message("Testrail Jest Reporter is running..."),
-      JSON.stringify(this._options, null, 2)
-    );
+    console.log(message("TestRail Detox Reporter is running..."));
 
     if (
       this._options.project_id &&
@@ -59,7 +56,7 @@ class CustomTestrailReporter {
     ) {
       caller.get_milestone_id();
     } else {
-      console.log(error(`! Testrail Jest Reporter Error !`));
+      console.log(error(`! TestRail Detox Reporter Error !`));
       console.log(
         warning(`You must define "project_id"  and "milestone" in jest configurations!
                 \n Example: "reporters": [ ["testrail-jest-reporter", { "project_id": "1", "milestone": "Sprint 1" }] ]`)
@@ -71,43 +68,43 @@ class CustomTestrailReporter {
 
   onTestResult(_test, _testResults, _aggregatedResult) {
     // Log _testResults.testResults
-    console.log(message("_testResults.testResults:"), _testResults.testResults);
+    // console.log(message("_testResults.testResults:"), _testResults.testResults);
 
     if (caller._milestone_id) {
       _testResults.testResults.forEach((result) => {
         const testcases = this._utils.formatCase(result);
-        console.log(message(`Testrail test cases...`), testcases);
+        // console.log(message(`TestRail test cases...`), testcases);
         if (testcases) {
           for (let i = 0, len = testcases.length; i < len; i++) {
             this.results.push(testcases[i]);
           }
         }
       });
-      console.log("RESULTS", this.results);
+      // console.log("RESULTS", this.results);
     }
   }
 
   onRunComplete(_contexts, _results) {
     // Log this.results
-    console.log(message("onRunComplete results:"), this.results);
+    // console.log(message("onRunComplete results:"), this.results);
 
     if (caller._milestone_id) {
-      console.log(
-        message("Testrail Jest Reporter is updating tests results...")
-      );
+      // console.log(
+      //   message("TestRail Detox Reporter is updating tests results...")
+      // );
       caller
         .get_tests()
         .then(() => {
           return caller.add_results(this.results);
         })
         .then((response) => {
-          console.log(message("add_results response:"), response);
+          // console.log(message("add_results response:"), response);
           if (response && typeof response === "object") {
             const { tests_count, runs_count } = response;
             if (tests_count)
               console.log(
                 message(
-                  `\nTestrail Jest Reporter updated ${tests_count} tests in ${runs_count} runs.`
+                  `\nTestRail Detox Reporter updated ${tests_count} tests in ${runs_count} runs.`
                 )
               );
           } else {
@@ -118,14 +115,14 @@ class CustomTestrailReporter {
           caller.close_run();
         })
         .catch((e) => {
-          console.log(error(`! Testrail Jest Reporter Error !\n${e.stack}`));
+          console.log(error(`! TestRail Detox Reporter Error !\n${e.stack}`));
         });
     }
   }
 
   getLastError() {
     if (this._shouldFail) {
-      return new Error("Testrail Jest Reporter reported an error");
+      return new Error("TestRail Detox Reporter reported an error");
     }
   }
 }

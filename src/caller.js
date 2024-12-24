@@ -48,12 +48,12 @@ async function add_results(testsResults) {
     runs = runs.concat(updated_runs);
   }
 
-  console.log("RUNS", runs);
+  // console.log("RUNS", runs);
   runID = runs[0].run_id;
 
   return Promise.all(
     runs.map((run) => {
-      console.log("RUN", run.run_id, run.results);
+      // console.log("RUN", run.run_id, run.results);
       return tr_api.add_results_for_cases(run.run_id, { results: run.results });
     })
   )
@@ -397,12 +397,12 @@ async function update_run(cases) {
 }
 
 async function close_run() {
-  console.log("RUNS", runID);
+  // console.log("RUNS", runID);
   if (this._runs_ids && runID) {
     await tr_api
       .close_run(runID)
       .then((response) => {
-        console.log("Run closed successfully:", response);
+        console.log("Run closed successfully with id: ", response.id);
       })
       .catch((error) => {
         console.error("****Error closing run:", error);
