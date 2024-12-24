@@ -5,7 +5,7 @@ Original credits to: [AntonChaukin/testrail-jest-reporter](https://github.com/An
 # Detox to TestRail Reporter
 
 This package allows you to use [Jest](https://jestjs.io/) and report  your test results to [TestRail](http://www.gurock.com/testrail/).
-<br>**Please use with combination with the default reporter**
+<br>**Please use with combination with the default reporter.**
 
 ## Install
 
@@ -27,12 +27,12 @@ the Reporter must be specified in the jest-config.js or package.json file as par
      >single repository for all cases - `suite_mode:1`<br>
      single repository with baseline support - `suite_mode:2`<br>
      multiple test suites to manage cases - `suite_mode:3`<br>
- - There is no 'pending' or 'skipped' test result status in the TestRail results default <br>statuses. 
- You can add your custom status to the TestRail and specify it id as parameter 
- <br>'"statuses":{"pending": "7"}' _(recommended)_.
+ - No 'pending' or 'skipped' test result status exists in the TestRail results default <br>statuses. 
+ You can add your custom status to the TestRail and specify its id as parameter 
+ <br>'"statuses":{"skipped": "6"}' _(recommended)_.
 #### Usage
 ```javascript
-// this is the part of the jest-config.js
+//This is the part of the jest.config.js
 module.exports = {
   ...,
   reporters: [
@@ -43,7 +43,7 @@ module.exports = {
             baseUrl: 'http://localhost', 
             milestone: {name:'<milestone_name>', description:'<milestone_description>'},
             suite_mode: 3,
-            statuses: {pending: 7}
+            statuses: {skipped: 6}
         },
     ]
   ], 
@@ -63,7 +63,7 @@ module.exports = {
                 "baseUrl": 'http://localhost',
                 "milestone": {"name":'<milestone_name>', "description":'<milestone_description>'},
                 "suite_mode": "3",
-                "statuses": {"pending": "7"}
+                "statuses": {"skipped": "6"}
             }
         ]
     ]
@@ -78,11 +78,11 @@ The **testrail.conf.js** file needs to be created in your project's root folder.
  - This file needs to have all 2 parameters correctly filled.
  - It may contain the URL of your TestRail server as a `baseUrl` parameter, or <br>it can be specified in
    [Jest configuration](https://github.com/AntonChaukin/testrail-jest-reporter#jest-configurations)
- - You can specify custom regex expresion _(default: `/[C][?\d]{3,6}/gm`)_
+ - You can specify custom regex expression _(default: `/[C][?\d]{3,6}/gm`)_
 ### Use TestRail Milestone
 The first version of the Reporter requires you to use a milestone.
- - Use TestRail Milestone to versioning your tests.
- - **testrail.conf.js** file needs to have Milestones name and description filled. Or <br>it can be specified in
+ - Use TestRail Milestone to version your tests.
+ - **testrail.conf.js** file must have the Milestones name and description filled. Or <br>it can be specified in
 [Jest configuration](https://github.com/AntonChaukin/testrail-jest-reporter#jest-configurations)
 
 #### Example
@@ -92,36 +92,35 @@ module.exports = {
     'user': 'user@example.com',
     'pass': 'some-password',
     'milestone': {'name':'<milestone_name>', 'description':'<milestone_description>'},
-    'regex': /[C][?\d]{3,6}/gm
 }
 ```
 Or you can use previous variant ```'milestone': '<milestone_name>'```
 
 ##### **Important:**  If you use a public repository, please, secure your sensitive data.
 ### Enable TestRail API
-In order to use [TestRail API](http://docs.gurock.com/testrail-api2/start), it needs to be enabled by an administrator
+To use [TestRail API](http://docs.gurock.com/testrail-api2/start), it needs to be enabled by an administrator
 <br>in your own TestRail Site Settings.
 Also, if you want to use API authentication instead of your password,
 <br>enable session authentication for API in the TestRail Site Settings,
 <br>and add an API key in your User settings _(This is recommended)_.
 ### Add TestRail tests Runs
-You can add a TestRail tests Runs or tests Plan with all tests you want to automate.<br> 
-If you don't, the Reporter will publish Jest tests results into the new TestRail test Run.<br>
-Each time the Jest runs tests the Reporter parse all TestRail tests Plans
-<br>and tests Runs of the Milestone to collect testcases.
-The Reporter collects only unique testcases,
-<br>if you have several tests Runs with one testcase
-then The Reporter push the test result only to one of that Runs.
+You can add a TestRail test Run or test Plan with all the tests you want to automate.<br> 
+If you don't, the Reporter will publish Jest test results into the new TestRail test Run.<br>
+Each time the Jest runs tests the Reporter parses all TestRail tests Plans
+<br>and tests Runs of the Milestone to collect test cases.
+The Reporter collects only unique test cases,
+<br> If you have several tests Run with one test case
+then The Reporter pushes the test result only to one of those Runs.
 
 ## Example tests
 
-The Case ID from TestRail may be added to **_it()_** description 
+The Case ID from TestRail may be added to **_it()_** Description 
 each test result you want to push to TestRail.
 You can specify several cases in one **_it()_** description.
 #### Usage
 ```javascript
 describe("Tests suite", () => {
-  // "C123" this is Case ID from Test Rail
+  // "C123" This is Case ID from Test Rail
   it("C123 test success", async () => {
     expect(1).toBe(1);
   });
@@ -138,31 +137,13 @@ describe("Tests suite", () => {
 **Note:** The Case ID is a unique and permanent ID of every test case (e.g. C125),
 and shouldn't be confused with a Test Case ID, <br>which is assigned to a test case when a new run is created (e.g. T325).
 
-**Note**: The first and second **_it()_** test result will be reported, and the last - not.
-
-## Roadmap
-**This version:**
-- ~~Add new tests Run if there are testcases that are not present in any of the existing TestRail tests Runs.~~ >> **Done in 1.1.0**
-- Add new test Runs if the Milestone not specified.
-- ~~Add new TestRail Milestone if the specified Milestone not present in the Project.~~ >> **Done in 1.2.0**
-- ~~Also need to write more tests.~~                                   >> **Done in 1.0.4**
-- ~~Added ability to specify several case_ids in one test description~~ >> **Done in 1.0.6**
-- ~~Added JSON validator to API interface~~ >> **Done in 1.0.7**
-- Migrate to GOT
-
-<br>**Version 2:**
-- Add the Reporter CLI.
-
-<br>**Version 3:**
-- Add ability to parse code annotations.
-- Add new TestRail testcase if **_it()_** description not specified by Case ID.
-- Add maintenance the TestRail test Plan and test Configurations.
-
+**Note**: The first and second **_it()_** test results will be reported, and the last - not.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/AntonChaukin/testrail-jest-reporter/blob/main/LICENSE) file for details.
+This project is been originally licensed under the MIT License - see the [LICENSE](https://github.com/AntonChaukin/testrail-jest-reporter/blob/main/LICENSE) file for details.
+This project has been forked and adapted to be used for detox tests - see the [LICENSE](https://github.com/Stacknvault/testrail-detox-reporter/main/LICENSE) file for details.
 
 ## Support
 
-[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/chaukinantv)
+[!["Buy Me a Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/ricardo.arostegui)
