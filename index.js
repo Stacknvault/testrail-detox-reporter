@@ -21,12 +21,6 @@ const Utils = require("./src/utils");
 const caller = require("./src/caller");
 
 class CustomTestrailReporter {
-  /**
-   * constructor for the reporter
-   *
-   * @param {Object} _globalConfig - Jest configuration object
-   * @param {Object} _options - Options object defined in jest config
-   */
   constructor(_globalConfig, _options) {
     this._globalConfig = _globalConfig;
     this._options = {};
@@ -46,26 +40,24 @@ class CustomTestrailReporter {
       statuses: _options && _options.statuses,
     });
     this.results = [];
+
+    // Log _options and milestone
+    console.log(message("Constructor _options:"), _options);
+    console.log(message("Constructor milestone:"), milestone);
   }
 
-  /**
-   * Hook to process the test run before running the tests, the only real data
-   * available at this time is the number of test suites about to be executed
-   *
-   * @param  _results - Results for the test run, but only `numTotalTestSuites` is of use
-   * @param  _options - Run configuration
-   */
   onRunStart(_results, _options) {
+    console.log(
+      message("Testrail Jest Reporter is running..."),
+      JSON.stringify(this._options, null, 2)
+    );
     if (
       this._options.project_id &&
       !isNaN(this._options.project_id) &&
       this._options.milestone
     ) {
       caller.get_milestone_id();
-      console.log(
-        message("Testrail Jest Reporter is running..."),
-        JSON.stringify(this._options, JSON.stringify(caller.get_milestone_id()))
-      );
+      //   caller.add_run();
     } else {
       console.log(error(`! Testrail Jest Reporter Error !`));
       console.log(
@@ -75,43 +67,30 @@ class CustomTestrailReporter {
     }
   }
 
-  /**
-   * Hook to process the test run before starting the test suite
-   * This will be called many times during the test run
-   *
-   * @param  _test - The Test this run
-   */
   onTestStart(_test) {}
 
-  /**
-   * Hook to process the test run results after a test suite has been executed
-   * This will be called many times during the test run
-   *
-   * @param  _test - The Test last run
-   * @param  _testResults - Results for the test suite just executed
-   * @param _aggregatedResult - Results for the test run at the point in time of the test suite being executed
-   */
   onTestResult(_test, _testResults, _aggregatedResult) {
+    // Log _testResults.testResults
+    console.log(message("_testResults.testResults:"), _testResults.testResults);
+
     if (caller._milestone_id) {
       _testResults.testResults.forEach((result) => {
         const testcases = this._utils.formatCase(result);
+        console.log(message(`Testrail test cases...`), testcases);
         if (testcases) {
           for (let i = 0, len = testcases.length; i < len; i++) {
             this.results.push(testcases[i]);
           }
         }
       });
+      console.log("RESULTS", this.results);
     }
   }
 
-  /**
-   * Hook to process the test run results after all the test suites have been
-   * executed
-   *
-   * @param {string} _contexts - The Contexts of the test run
-   * @param {JestTestRunResult} _results - Results from the test run
-   */
   onRunComplete(_contexts, _results) {
+    // Log this.results
+    console.log(message("onRunComplete results:"), this.results);
+
     if (caller._milestone_id) {
       console.log(
         message("Testrail Jest Reporter is updating tests results...")
@@ -121,13 +100,19 @@ class CustomTestrailReporter {
         .then(() => {
           return caller.add_results(this.results);
         })
-        .then(({ tests_count, runs_count }) => {
-          if (tests_count)
-            console.log(
-              message(
-                `\nTestrail Jest Reporter updated ${tests_count} tests in ${runs_count} runs.`
-              )
-            );
+        .then((response) => {
+          console.log(message("add_results response:"), response);
+          if (response && typeof response === "object") {
+            const { tests_count, runs_count } = response;
+            if (tests_count)
+              console.log(
+                message(
+                  `\nTestrail Jest Reporter updated ${tests_count} tests in ${runs_count} runs.`
+                )
+              );
+          } else {
+            console.log(error("Invalid response from add_results"));
+          }
         })
         .catch((e) => {
           console.log(error(`! Testrail Jest Reporter Error !\n${e.stack}`));
