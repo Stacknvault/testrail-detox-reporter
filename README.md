@@ -78,7 +78,6 @@ The **testrail.conf.js** file needs to be created in your project's root folder.
  - This file needs to have all 2 parameters correctly filled.
  - It may contain the URL of your TestRail server as a `baseUrl` parameter, or <br>it can be specified in
    [Jest configuration](https://github.com/AntonChaukin/testrail-jest-reporter#jest-configurations)
- - You can specify custom regex expression _(default: `/[C][?\d]{3,6}/gm`)_
 ### Use TestRail Milestone
 The first version of the Reporter requires you to use a milestone.
  - Use TestRail Milestone to version your tests.
